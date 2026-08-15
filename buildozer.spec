@@ -7,7 +7,7 @@ source.include_exts = py,png,jpg,jpeg,kv,atlas,ttf,otf,json,txt,db,sqlite3
 
 version = 1.0
 
-requirements = python3,kivy==2.2.1
+requirements = python3==3.11.8,kivy==2.2.1
 
 orientation = portrait
 fullscreen = 0
