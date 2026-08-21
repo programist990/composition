@@ -31,32 +31,19 @@ def write_json(path, data):
         json.dump(data, file, ensure_ascii=False, indent=4)
 
 
-def get_box_count(name):
-    for item in basket_quantity:
-        if item[0] == name:
-            return item[1]
-    return 0
-
-
-def set_box_count(name, count):
-    for item in basket_quantity:
-        if item[0] == name:
-            item[1] = count
-            return
-    basket_quantity.append([name, count])
-
-
-def remove_box_count(name):
-    for item in basket_quantity:
-        if item[0] == name:
-            basket_quantity.remove(item)
-            return
-
-
 def read_products():
     with open(PATH_DATA + "list_products.json", "r", encoding="utf8") as file:
         data = json.load(file)
     return data
+
+
+def reset_quantities():
+    products = read_products()
+
+    for name in products:
+        products[name]["quantity"] = "1"
+
+    write_json(PATH_DATA + "list_products.json", products)
 
 
 class BoxRow(BoxLayout):
@@ -112,7 +99,6 @@ class BasketRow(BoxLayout):
     product_price = StringProperty("")
     product_volume = StringProperty("")
     quantity_box = StringProperty("0")
-    box_count = StringProperty("0")
 
     def on_touch_up(self, touch):
         if self.collide_point(touch.pos[0], touch.pos[1]) and self.product_name:
@@ -135,14 +121,12 @@ class BasketScreen(Screen):
         for name in basket:
             if name in products:
                 info = products[name]
-                box_count = get_box_count(name)
 
                 row = BasketRow(
                     product_name=name,
                     product_price=info["price"],
                     product_volume=info["volume"],
                     quantity_box=info["quantity"],
-                    box_count=str(box_count),
                 )
                 self.ids.basket_container.add_widget(row)
 
@@ -160,49 +144,15 @@ class BasketScreen(Screen):
 class BasketItemScreen(Screen):
     product_name = StringProperty("")
     product_image = StringProperty("")
-    quantity_box = StringProperty("0")
-    box_count = StringProperty("0")
 
     def load_item(self, name):
         products = read_products()
 
         self.product_name = name
         self.product_image = RESOURCES[name]
-        self.quantity_box = "0"
 
         if name in products:
             self.quantity_box = products[name]["quantity"]
-
-        self.box_count = str(get_box_count(name))
-
-    def add_quantity(self):
-        count = int(self.box_count)
-        if count < 155:
-            count += 1
-        self.box_count = str(count)
-        self.save_boxes()
-
-    def delete_quantity(self):
-        count = int(self.box_count)
-        if count > 0:
-            count -= 1
-        self.box_count = str(count)
-        self.save_boxes()
-
-    def set_boxes_manual(self, text):
-        count = ""
-        for ch in text:
-            if ch.isdigit:
-                count += ch
-        if count == "":
-            count = "0"
-        if count != self.box_count:
-            self.box_count = count
-            self.save_boxes()
-
-    def save_boxes(self):
-        count = int(self.box_count)
-        set_box_count(self.product_name, count)
 
     def goto_basket(self):
         screen = self.manager.get_screen("basket")
@@ -274,8 +224,6 @@ class ProductScreen(Screen):
         if self.product_name in basket:
             basket.remove(self.product_name)
 
-        remove_box_count(self.product_name)
-
         self.goto_main()
 
     def goto_main(self):
@@ -285,6 +233,7 @@ class ProductScreen(Screen):
 
 class MenuScreen(Screen):
     def goto_main(self):
+        reset_quantities()
         self.manager.current = "main"
         self.manager.transition.direction = "up"
 
@@ -343,9 +292,11 @@ class Order(Screen):
     total_volume = StringProperty("0")
     volume_fits = BooleanProperty(True)
     volume_status = StringProperty("")
+    box_count_status = StringProperty("")
 
     def __init__(self, **kw):
         super().__init__(**kw)
+        self.get_volume_products()
 
     def buyer_details(self, key: str, text: str):
         if key == "name":
@@ -391,34 +342,12 @@ class Order(Screen):
 
     def toggle_packing(self, active):
         self.pack_order = active
-        self.check_packaging()
 
-    def calc_total_volume(self):
-        products = read_products()
-        total = 0
-
-        for name in basket:
-            if name in products:
-                box_count = get_box_count(name)
-                if box_count >= 1:
-                    quantity = int(products[name]["quantity"])
-                    volume = int(products[name]["volume"])
-                    total += box_count * quantity * volume
-
-        return total
-
-    def check_packaging(self):
-        total = self.calc_total_volume()
-        self.total_volume = str(total)
-        self.volume_fits = total <= PACKING_BOX_VOLUME
-
-        volume_liters = total / 1000
-        if self.volume_fits:
-            self.volume_status = ""
+        if active:
+            box_quantity = self.fill_box()
+            self.box_count_status = f"Используется коробок: {box_quantity}"
         else:
-            self.volume_status = (
-                f"Не вмещается! {volume_liters} л из 10 л — уберите часть товара"
-            )
+            self.box_count_status = ""
 
     def confirm_order(self):
         full_name = self.get_full_name()
@@ -429,13 +358,6 @@ class Order(Screen):
             return False
 
         items = {}
-        for name in basket:
-            box_count = get_box_count(name)
-            if box_count >= 1:
-                items[name] = box_count
-
-        if not items:
-            return False
 
         seller_id = self.seller_id(full_name)
         date = datetime.now().strftime("%d.%m.%Y")
@@ -481,7 +403,6 @@ class Order(Screen):
         )
 
         basket.clear()
-        basket_quantity.clear()
         self.buyer_name = ""
         self.buyer_surname = ""
         self.pack_order = False
@@ -498,19 +419,16 @@ class Order(Screen):
         for name in basket:
             if name in products:
                 info = products[name]
-                box_count = get_box_count(name)
 
                 row = OrderRow(
                     product_name=name,
                     product_price=info["price"],
                     product_volume=info["volume"],
                     quantity_box=info["quantity"],
-                    box_count=str(box_count),
                 )
                 self.ids.order_products.add_widget(row)
 
         self.total_price = self.sum_price()
-        self.check_packaging()
 
     def sum_price(self) -> str:
         products = read_products()
@@ -518,15 +436,61 @@ class Order(Screen):
 
         for name in basket:
             if name in products:
-                box_count = get_box_count(name)
-                if box_count >= 1:
-                    total += (
-                        box_count
-                        * int(products[name]["quantity"])
-                        * int(products[name]["price"])
-                    )
+                total += int(products[name]["quantity"]) * int(products[name]["price"])
 
         return str(total)
+
+    def get_volume_products(self):
+        all_products = read_products()
+        products = {}
+        for name in basket:
+            if name in all_products:
+                products[name] = all_products[name]
+
+        result = {}
+        for name, item in products.items():
+            quantity = int(item["quantity"])
+            volume = int(item["volume"])
+            result[name] = {
+                "quantity": quantity,
+                "volume": volume,
+            }
+
+        sorted_items = sorted(
+            result.items(), key=lambda x: x[1]["volume"], reverse=True
+        )
+        return sorted_items
+
+    def fill_box(self):
+        box_volume = 10000
+        box_quantity = 1
+        product_items = self.get_volume_products()
+
+        while True:
+            placed = False
+
+            for name, data in product_items:
+                if data["quantity"] > 0 and data["volume"] <= box_volume:
+                    box_volume -= data["volume"]
+                    data["quantity"] -= 1
+                    placed = True
+                    break
+
+            if placed:
+                continue
+
+            remaining = False
+            for name, data in product_items:
+                if data["quantity"] > 0:
+                    remaining = True
+                    break
+            if not remaining:
+                break
+
+            box_quantity += 1
+            box_volume = 10000
+
+        return box_quantity
 
 
 class OrderConfirmedScreen(Screen):

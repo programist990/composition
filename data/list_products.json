@@ -1,32 +1,32 @@
 {
     "яблоко": {
-        "quantity": "30",
+        "quantity": "1",
         "price": "35",
         "volume": "100"
     },
     "банан": {
-        "quantity": "10",
+        "quantity": "1",
         "price": "70",
         "volume": "120"
     },
     "клубника": {
-        "quantity": "21",
+        "quantity": "1",
         "price": "200",
         "volume": "500"
     },
     "виноград": {
-        "quantity": "20",
+        "quantity": "4",
         "price": "150",
-        "volume": "500"
+        "volume": "2000"
     },
     "ананас": {
-        "quantity": "1",
+        "quantity": "2",
         "price": "180",
-        "volume": "1000"
+        "volume": "3000"
     },
     "арбуз": {
-        "quantity": "20",
+        "quantity": "1",
         "price": "180",
-        "volume": "9000"
+        "volume": "6000"
     }
 }

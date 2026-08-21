@@ -54,8 +54,8 @@
         text: root.product_price
     MainLabel:
         text: root.quantity_box
-    MainLabel:
-        text: root.box_count
+    # MainLabel:
+    #     text: root.box_count
     MainImage:
         source: RESOURCES[root.product_name]    
 <BasketRow>:
@@ -68,8 +68,8 @@
         text: root.product_price
     MainLabel:
         text: root.quantity_box
-    MainLabel:
-        text: root.box_count
+    # MainLabel:
+    #     text: root.box_count
     MainImage:
         source: RESOURCES[root.product_name]
 
@@ -101,50 +101,7 @@
             size: (dp(180), dp(45))
             pos_hint: {"center_x": 0.5}
 
-        MainLabel:
-            text: "Продуктов в коробке: " + root.quantity_box
-            size_hint: (None, None)
-            size: (dp(260), dp(40))
-            pos_hint: {"center_x": 0.5}
 
-        MainLabel:
-            text: "Коробок:"
-            size_hint: (None, None)
-            size: (dp(150), dp(35))
-            pos_hint: {"center_x": 0.5}
-
-        BoxLayout:
-            size_hint_y: None
-            height: "70dp"
-            spacing: "15dp"
-            padding: "40dp", 0
-
-            Button:
-                text: "-"
-                size_hint: None, None
-                size: "65dp", "65dp"
-                background_normal: ""
-                background_color: 0.8, 0.2, 0.2, 1
-                radius: [32]
-                on_press: root.delete_quantity()
-
-            TextInput:
-                id: box_input
-                text: root.box_count
-                multiline: False
-                input_filter: "int"
-                font_size: "24sp"
-                halign: "center"
-                on_text: root.set_boxes_manual(self.text)
-
-            Button:
-                text: "+"
-                size_hint: None, None
-                size: "65dp", "65dp"
-                background_normal: ""
-                background_color: 0.2, 0.7, 0.2, 1
-                radius: [32]
-                on_press: root.add_quantity()
 
         Widget:
             size_hint_y: 1
@@ -204,13 +161,8 @@
                 background_color: 0.3, 0.3, 0.3, 1
                 on_press: root.goto_main()
 
-            Button:
-                text: "Закази"
-                size_hint: None, None
-                size: "100dp", "40dp"
-                background_normal: ""
-                background_color: 0.3, 0.3, 0.3, 1
-                # on_press: root.orders()
+            Widget:
+                size_hint_y: 0.5
 
 
             Button:
@@ -237,7 +189,7 @@
             # Widget:
             #     size_hint_x: 0.1
             Label:
-                text: "Вес:"
+                text: " Кол.:"
             Label:
                 text: "Объём:"
             Widget:
@@ -320,15 +272,6 @@
                 radius: [32]
                 on_press: root.delete_quantity()
 
-        Button:
-            text: "Delete"
-            size_hint: None, None
-            size: "150dp", "55dp"
-            pos_hint: {"center_x": 0.5}
-            background_normal: ""
-            background_color: 0.5, 0.5, 0.5, 1
-            on_press: root.delete_product()
-
         Widget:
             size_hint_y: 1
 
@@ -358,9 +301,8 @@
             Label:
                 text: "Цена"
             Label:
-                text: "В коробке"
-            Label:
-                text: "Коробок"
+                text: "Кол.:"
+
             Widget:
                 size_hint_x: 0.4
 
@@ -381,9 +323,12 @@
             text: "Заказать"
             size_hint: None, None
             pos_hint: {"center_x": 0.5}
-            size: "120dp", "50dp"
+            size: "160dp", "56dp"
+            font_size: "18sp"
+            bold: True
             background_normal: ""
-            background_color: 0.3, 0.3, 0.3, 1
+            background_color: (0.18, 0.75, 0.38, 1) if self.state == 'normal' else (0.22, 0.82, 0.44, 1)
+            color: 1, 1, 1, 1
             on_press: root.goto_order()
 
 
@@ -489,13 +434,10 @@
                 bold: True
                 color: 0.7, 0.75, 0.85, 1
             Label:
-                text: "В коробке"
+                text: "Количество"
                 bold: True
                 color: 0.7, 0.75, 0.85, 1
-            Label:
-                text: "Коробок"
-                bold: True
-                color: 0.7, 0.75, 0.85, 1
+
             Widget:
                 size_hint_x: 0.4
 
@@ -531,6 +473,22 @@
                 text_size: self.size
 
         BoxLayout:
+            size_hint_y: None
+            height: "26dp"
+            opacity: 1
+
+            Label:
+                text: root.box_count_status
+                font_size: "13sp"
+                color: 0.6, 0.85, 0.6, 1
+                halign: "left"
+                valign: "middle"
+                text_size: self.size
+            
+        Widget:
+            size_hint_y: 0.3
+
+        BoxLayout:
             orientation: "horizontal"
             size_hint_y: None
             height: "56dp"
@@ -544,9 +502,12 @@
 
             Button:
                 text: "Подтвердить"
-                font_size: "18sp"
+                size_hint: None, None
+                size: "200dp", "56dp"
+                font_size: "20sp"
                 bold: True
-                background_color: (0.22, 0.65, 0.4, 1)
+                background_normal: ""
+                background_color: (0.18, 0.75, 0.38, 1) if self.state == 'normal' else (0.22, 0.82, 0.44, 1)
                 color: 1, 1, 1, 1
                 on_press: root.confirm_order()
 
