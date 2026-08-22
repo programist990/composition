@@ -201,10 +201,9 @@
             do_scroll_x: False
             do_scroll_y: True
 
-            GridLayout:
+            BoxLayout:
                 id: main_container
-                cols: 1
-                row_default_height: 40
+                orientation: "vertical"
                 size_hint_y: None
                 height: self.minimum_height
                 padding: '20dp'
@@ -310,10 +309,9 @@
             do_scroll_x: False
             do_scroll_y: True
 
-            GridLayout:
+            BoxLayout:
                 id: basket_container
-                cols: 1
-                row_default_height: 40
+                orientation: "vertical"
                 size_hint_y: None
                 height: self.minimum_height
                 padding: '20dp'
@@ -337,7 +335,7 @@
 <Order>:
     canvas.before:
         Color:
-            rgba: 0.09, 0.11, 0.16, 1
+            rgba: 0, 0, 0, 1
         Rectangle:
             pos: self.pos
             size: self.size
@@ -411,10 +409,9 @@
         ScrollView:
             do_scroll_x: False
             do_scroll_y: True
-            GridLayout:
+            BoxLayout:
                 id: order_products
-                cols: 1
-                row_default_height: 44
+                orientation: "vertical"
                 size_hint_y: None
                 height: self.minimum_height
                 spacing: "8dp"

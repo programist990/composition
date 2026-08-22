@@ -532,7 +532,7 @@ class CompositionApp(App):
             Window.fullscreen = True
         else:
             Window.size = (350, 700)
-            Window.clearcolor = (0.12, 0.16, 0.22, 1)
+            Window.clearcolor = (0, 0, 0, 1)
             Window.left = 450
             Window.top = 1
 
