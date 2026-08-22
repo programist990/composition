@@ -1,4 +1,6 @@
 import os
+
+os.environ["KIVY_NO_MULTITOUCH"] = "1"
 import json
 from settings import *
 from resources import *
@@ -16,6 +18,8 @@ from kivy.core.window import Window
 from kivy.properties import StringProperty, BooleanProperty
 from kivy.uix.checkbox import CheckBox
 from datetime import datetime
+from kivy.utils import platform
+from kivy.lang import Builder
 
 
 def read_json(path):
@@ -514,25 +518,27 @@ class CompositionApp(App):
     resources = RESOURCES
 
     def build(self):
-        scr_sm = ScreenManager()
-        scr_sm.add_widget(MenuScreen(name="menu"))
-        scr_sm.add_widget(MainScreen(name="main"))
-        scr_sm.add_widget(ProductScreen(name="product_screen"))
-        scr_sm.add_widget(BasketScreen(name="basket"))
-        scr_sm.add_widget(BasketItemScreen(name="basket_item"))
-        scr_sm.add_widget(Order(name="order"))
-        scr_sm.add_widget(OrderConfirmedScreen(name="order_confirmed"))
+        self.scr_sm = ScreenManager()
+        self.scr_sm.add_widget(MenuScreen(name="menu"))
+        self.scr_sm.add_widget(MainScreen(name="main"))
+        self.scr_sm.add_widget(ProductScreen(name="product_screen"))
+        self.scr_sm.add_widget(BasketScreen(name="basket"))
+        self.scr_sm.add_widget(BasketItemScreen(name="basket_item"))
+        self.scr_sm.add_widget(Order(name="order"))
+        self.scr_sm.add_widget(OrderConfirmedScreen(name="order_confirmed"))
 
-        return scr_sm
+        if platform == "android":
+            Window.clearcolor = (0.0, 0.0, 0.0, 1)
+            Window.fullscreen = True
+        else:
+            Window.size = (350, 700)
+            Window.clearcolor = (0.12, 0.16, 0.22, 1)
+            Window.left = 450
+            Window.top = 1
+
+        Builder.load_file("composition.kv")
+        return self.scr_sm
 
 
 if __name__ == "__main__":
-
-    Window.clearcolor = (0.12, 0.16, 0.22, 1)
-    Window.size = (350, 700)
-    Window.left = 450
-    Window.top = 1
-
-    app = CompositionApp()
-    app.stop
-    app.run()
+    CompositionApp().run()
