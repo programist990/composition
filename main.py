@@ -542,3 +542,4 @@ class CompositionApp(App):
 
 if __name__ == "__main__":
     CompositionApp().run()
+    print("Hello")
