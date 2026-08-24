@@ -8,7 +8,6 @@ from kivy.app import App
 from kivy.uix.button import Button
 from kivy.uix.label import Label
 from kivy.uix.boxlayout import BoxLayout
-from kivy.uix.gridlayout import GridLayout
 from kivy.uix.scrollview import ScrollView
 from kivy.graphics import Color, RoundedRectangle
 from kivy.uix.image import Image
@@ -19,7 +18,6 @@ from kivy.properties import StringProperty, BooleanProperty
 from kivy.uix.checkbox import CheckBox
 from datetime import datetime
 from kivy.utils import platform
-from kivy.lang import Builder
 
 
 def read_json(path):
@@ -528,15 +526,14 @@ class CompositionApp(App):
         self.scr_sm.add_widget(OrderConfirmedScreen(name="order_confirmed"))
 
         if platform == "android":
-            Window.clearcolor = (0.0, 0.0, 0.0, 1)
+            Window.clearcolor = (0.055, 0.07, 0.09, 1)
             Window.fullscreen = True
         else:
             Window.size = (350, 700)
-            Window.clearcolor = (0, 0, 0, 1)
+            Window.clearcolor = (0.055, 0.07, 0.09, 1)
             Window.left = 450
             Window.top = 1
 
-        Builder.load_file("composition.kv")
         return self.scr_sm
 
 

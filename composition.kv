@@ -1,21 +1,57 @@
 #:import RESOURCES resources.RESOURCES
 
-<MenuButton@Button>
-    font_size: "40dp"
-    font_name: "assets/CascadiaCode.ttf"
+#:set BG (0.055, 0.07, 0.09, 1)
+#:set SURFACE (0.09, 0.115, 0.145, 1)
+#:set SURFACE_2 (0.12, 0.15, 0.19, 1)
+#:set TEXT (0.94, 0.96, 0.98, 1)
+#:set MUTED (0.60, 0.66, 0.73, 1)
+#:set ACCENT (0.30, 0.78, 0.74, 1)
+#:set ACCENT_DARK (0.20, 0.58, 0.55, 1)
+#:set DANGER (0.92, 0.34, 0.40, 1)
+#:set SUCCESS (0.30, 0.78, 0.52, 1)
 
-
-<MainLabel>:
-    color: "black"
+<DarkButton@Button>:
+    background_normal: ""
+    background_down: ""
+    color: TEXT
     font_name: "assets/CascadiaCode.ttf"
+    background_color: 0, 0, 0, 0
     canvas.before:
         Color:
-            rgba:(0.6, 0.7, 0.85, 1)
+            rgba: ACCENT if self.state == 'normal' else ACCENT_DARK
         RoundedRectangle:
             pos: self.pos
             size: self.size
-            radius: [dp(10)]
+            radius: [dp(14)]
 
+<SoftButton@Button>:
+    background_normal: ""
+    background_down: ""
+    color: TEXT
+    font_name: "assets/CascadiaCode.ttf"
+    background_color: 0, 0, 0, 0
+    canvas.before:
+        Color:
+            rgba: SURFACE_2 if self.state == 'normal' else (0.15, 0.19, 0.24, 1)
+        RoundedRectangle:
+            pos: self.pos
+            size: self.size
+            radius: [dp(14)]
+
+<MainLabel>:
+    color: TEXT
+    font_name: "assets/CascadiaCode.ttf"
+    font_size: "14sp"
+    valign: "middle"
+    text_size: self.size
+    padding_x: dp(12)
+    canvas.before:
+        Color:
+            rgba: SURFACE
+        RoundedRectangle:
+            pos: self.pos
+            size: self.size
+            radius: [dp(12)]
 
 <MainImage>:
     size_hint: (0.1, 0.1)
@@ -25,11 +61,12 @@
     size_hint_y: None
     height: dp(50)
 
-
 <BoxRow>:
+    size_hint_x: 1
     size_hint_y: None
-    height: dp(50)
-    spacing: dp(10)
+    height: dp(60)
+    spacing: dp(8)
+    padding: dp(4)
     MainLabel:
         text: root.product_name
     MainLabel:
@@ -43,368 +80,515 @@
     CheckBox:
         on_active: root.on_checkbox_active(self)
         active: root.cb_active
+        size_hint_x: None
+        width: dp(36)
 
 <OrderRow>:
+    size_hint_x: 1
     size_hint_y: None
-    height: dp(50)
-    spacing: dp(10)
+    height: dp(60)
+    spacing: dp(8)
+    padding: dp(4)
     MainLabel:
         text: root.product_name
     MainLabel:
         text: root.product_price
     MainLabel:
         text: root.quantity_box
-    # MainLabel:
-    #     text: root.box_count
-    MainImage:
-        source: RESOURCES[root.product_name]    
-<BasketRow>:
-    size_hint_y: None
-    height: dp(50)
-    spacing: dp(10)
-    MainLabel:
-        text: root.product_name
-    MainLabel:
-        text: root.product_price
-    MainLabel:
-        text: root.quantity_box
-    # MainLabel:
-    #     text: root.box_count
     MainImage:
         source: RESOURCES[root.product_name]
 
+<BasketRow>:
+    size_hint_x: 1
+    size_hint_y: None
+    height: dp(60)
+    spacing: dp(8)
+    padding: dp(4)
+    MainLabel:
+        text: root.product_name
+    MainLabel:
+        text: root.product_price
+    MainLabel:
+        text: root.quantity_box
+    MainImage:
+        source: RESOURCES[root.product_name]
 
 <BasketItemScreen>:
+    canvas.before:
+        Color:
+            rgba: BG
+        Rectangle:
+            pos: self.pos
+            size: self.size
     BoxLayout:
         orientation: "vertical"
-        padding: "20dp", "10dp"
-        spacing: "8dp"
+        padding: dp(20), dp(14)
+        spacing: dp(14)
 
-        Button:
-            text: "< Назад"
+        SoftButton:
+            text: "‹  Назад"
             size_hint: None, None
-            size: "120dp", "50dp"
-            background_normal: ""
-            background_color: 0.3, 0.3, 0.3, 1
+            size: dp(120), dp(46)
             on_press: root.goto_basket()
 
         Image:
             source: root.product_image
             fit_mode: "contain"
             size_hint_y: None
-            height: "160dp"
+            height: dp(190)
 
-        MainLabel:
+        Label:
             id: text_product
             text: root.product_name
-            size_hint: (None, None)
-            size: (dp(180), dp(45))
-            pos_hint: {"center_x": 0.5}
-
-
+            color: TEXT
+            font_name: "assets/CascadiaCode.ttf"
+            font_size: "22sp"
+            bold: True
+            size_hint_y: None
+            height: dp(44)
+            text_size: self.width, None
+            halign: "center"
 
         Widget:
             size_hint_y: 1
-
-
 
 <MenuScreen>:
-    BoxLayout:
-        orientation: "vertical"
-        padding: 80
-        Label:
-            text: "Склад"
-            font_size: "40sp"
-            color: (0.15, 0.15, 0.15, 1)
-            font_name: "assets/CascadiaCode.ttf"
-            canvas.before:
-                Color:
-                    rgba: (0.85, 0.87, 0.90, 1)
-                RoundedRectangle:
-                    pos: self.pos
-                    size: self.size
-                    radius: [dp(10)]
-        Image:
-            source: 'assets/images/logo.png'
-            fit_mode: 'cover'
-        MenuButton:
-            text: "Открыть"
-            on_press: root.goto_main()
-
-            background_normal: ""
-            background_down: ""
-            background_color: 0, 0, 0, 0
-            canvas.before:
-                Color:
-                    rgba: (0.11, 0.31, 0.85, 1) if self.state == 'normal' else (0.15, 0.39, 0.92, 1)
-
-                RoundedRectangle:
-                    pos: self.pos
-                    size: self.size
-                    radius: [dp(10)]
-
-
-<MainScreen>:
-    BoxLayout:
-        orientation: "vertical"
-        BoxLayout:
-            size_hint_y: None
-            height: "56dp"
-            padding: "10dp", "8dp"
-            spacing: "10dp"
-
-            Button:
-                text: "Меню"
-                size_hint: None, None
-                size: "100dp", "40dp"
-                background_normal: ""
-                background_color: 0.3, 0.3, 0.3, 1
-                on_press: root.goto_main()
-
-            Widget:
-                size_hint_y: 0.5
-
-
-            Button:
-                text: "Корзина"
-                size_hint: None, None
-                size: "120dp", "40dp"
-                background_normal: ""
-                background_color: 0.11, 0.31, 0.85, 1
-                on_press: root.goto_basket()
-
-        BoxLayout:
-            size_hint_y: None
-            height: "56dp"
-            padding: "10dp", "8dp"
-            spacing: "10dp"
-            Widget:
-                size_hint_x: 0.1
-            Label:
-                text: "Название:"
-            Widget:
-                size_hint_x: 0.1
-            Label:
-                text: "Цена:"
-            # Widget:
-            #     size_hint_x: 0.1
-            Label:
-                text: " Кол.:"
-            Label:
-                text: "Объём:"
-            Widget:
-                size_hint_x: 1
-            Widget:
-                size_hint_x: 1
-                
-        ScrollView:
-            do_scroll_x: False
-            do_scroll_y: True
-
-            BoxLayout:
-                id: main_container
-                orientation: "vertical"
-                size_hint_y: None
-                height: self.minimum_height
-                padding: '20dp'
-                spacing: '6dp'
-
-
-<ProductScreen>:
-    BoxLayout:
-        orientation: "vertical"
-        padding: "20dp", "10dp"
-        spacing: "8dp"
-
-        Button:
-            text: "< Назад"
-            size_hint: None, None
-            size: "120dp", "50dp"
-            background_normal: ""
-            background_color: 0.3, 0.3, 0.3, 1
-            on_press: root.goto_main()
-
-        Image:
-            source: root.product_image
-            fit_mode: "contain"
-            size_hint_y: None
-            height: "160dp"
-
-        MainLabel:
-            id: text_product
-            text: root.product_name
-            size_hint: (None, None)
-            size: (dp(180), dp(45))
-            pos_hint: {"center_x": 0.5}
-
-        MainLabel:
-            id: text_quantity
-            text: root.product_quantity
-            size_hint: (None, None)
-            size: (dp(100), dp(45))
-            pos_hint: {"center_x": 0.5}
-
-        BoxLayout:
-            size_hint_y: None
-            height: "70dp"
-            spacing: "15dp"
-            padding: "60dp", 0
-
-            Button:
-                text: "+"
-                size_hint: None, None
-                size: "65dp", "65dp"
-                background_normal: ""
-                background_color: 0.2, 0.7, 0.2, 1
-                radius: [32]
-                on_press: root.add_quantity()
-
-            Widget:
-                size_hint_x: 1
-
-            Button:
-                text: "-"
-                size_hint: None, None
-                size: "65dp", "65dp"
-                background_normal: ""
-                background_color: 0.8, 0.2, 0.2, 1
-                radius: [32]
-                on_press: root.delete_quantity()
-
-        Widget:
-            size_hint_y: 1
-
-
-<BasketScreen>:
-    BoxLayout:
-        orientation: "vertical"
-        padding: "20dp", "10dp"
-        spacing: "8dp"
-
-        Button:
-            text: "< Назад"
-            size_hint: None, None
-            size: "120dp", "50dp"
-            background_normal: ""
-            background_color: 0.3, 0.3, 0.3, 1
-            on_press: root.goto_main()
-
-        BoxLayout:
-            size_hint_y: None
-            height: "36dp"
-            spacing: "10dp"
-            padding: "20dp", 0
-
-            Label:
-                text: "Товар"
-            Label:
-                text: "Цена"
-            Label:
-                text: "Кол.:"
-
-            Widget:
-                size_hint_x: 0.4
-
-        ScrollView:
-            do_scroll_x: False
-            do_scroll_y: True
-
-            BoxLayout:
-                id: basket_container
-                orientation: "vertical"
-                size_hint_y: None
-                height: self.minimum_height
-                padding: '20dp'
-                spacing: '6dp'
-        
-        Button:
-            text: "Заказать"
-            size_hint: None, None
-            pos_hint: {"center_x": 0.5}
-            size: "160dp", "56dp"
-            font_size: "18sp"
-            bold: True
-            background_normal: ""
-            background_color: (0.18, 0.75, 0.38, 1) if self.state == 'normal' else (0.22, 0.82, 0.44, 1)
-            color: 1, 1, 1, 1
-            on_press: root.goto_order()
-
-
-
-
-<Order>:
     canvas.before:
         Color:
-            rgba: 0, 0, 0, 1
+            rgba: BG
+        Rectangle:
+            pos: self.pos
+            size: self.size
+
+    FloatLayout:
+        padding: dp(24)
+
+        BoxLayout:
+            orientation: "vertical"
+            size_hint: 0.88, 0.74
+            pos_hint: {"center_x": 0.5, "center_y": 0.52}
+            padding: dp(26)
+            spacing: dp(18)
+            canvas.before:
+                Color:
+                    rgba: SURFACE
+                RoundedRectangle:
+                    pos: self.pos
+                    size: self.size
+                    radius: [dp(24)]
+
+            Label:
+                text: "СКЛАД"
+                font_size: "14sp"
+                bold: True
+                letter_spacing: 3
+                color: ACCENT
+                font_name: "assets/CascadiaCode.ttf"
+                size_hint_y: None
+                height: dp(28)
+
+            Label:
+                text: "Управляйте товарами\nбыстро и удобно"
+                font_size: "28sp"
+                bold: True
+                color: TEXT
+                font_name: "assets/CascadiaCode.ttf"
+                halign: "left"
+                valign: "middle"
+                text_size: self.width, None
+                size_hint_y: None
+                height: dp(90)
+
+            Label:
+                text: "Товары, остатки и заказы — всё в одном месте."
+                font_size: "15sp"
+                color: MUTED
+                font_name: "assets/CascadiaCode.ttf"
+                halign: "left"
+                valign: "top"
+                text_size: self.width, None
+                size_hint_y: None
+                height: dp(52)
+
+            Widget:
+                size_hint_y: 1
+
+            DarkButton:
+                text: "ОТКРЫТЬ СКЛАД  →"
+                font_size: "18sp"
+                bold: True
+                size_hint_y: None
+                height: dp(60)
+                on_press: root.goto_main()
+
+            Label:
+                text: "ЕЖЕДНЕВНАЯ РАБОТА  •  ПРОСТО  •  ПОНЯТНО"
+                font_size: "10sp"
+                color: MUTED
+                font_name: "assets/CascadiaCode.ttf"
+                size_hint_y: None
+                height: dp(22)
+
+<MainScreen>:
+    canvas.before:
+        Color:
+            rgba: BG
         Rectangle:
             pos: self.pos
             size: self.size
 
     BoxLayout:
         orientation: "vertical"
-        padding: "20dp"
-        spacing: "16dp"
+        padding: dp(14), dp(12)
+        spacing: dp(10)
 
         BoxLayout:
             size_hint_y: None
-            height: "60dp"
+            height: dp(54)
+            spacing: dp(10)
+
+            SoftButton:
+                text: "☰  Меню"
+                size_hint_x: None
+                width: dp(110)
+                font_size: "13sp"
+                on_press: root.goto_main()
+
+            Label:
+                text: "СКЛАД"
+                color: TEXT
+                font_name: "assets/CascadiaCode.ttf"
+                font_size: "19sp"
+                bold: True
+                halign: "center"
+                valign: "middle"
+
+            DarkButton:
+                text: "Корзина"
+                size_hint_x: None
+                width: dp(120)
+                font_size: "13sp"
+                on_press: root.goto_basket()
+
+        BoxLayout:
+            size_hint_y: None
+            height: dp(40)
+            spacing: dp(6)
+
+            Label:
+                text: "ТОВАР"
+                color: MUTED
+                font_name: "assets/CascadiaCode.ttf"
+                font_size: "11sp"
+                bold: True
+                halign: "left"
+                valign: "middle"
+            Label:
+                text: "ЦЕНА"
+                color: MUTED
+                font_name: "assets/CascadiaCode.ttf"
+                font_size: "11sp"
+                bold: True
+                halign: "center"
+                valign: "middle"
+            Label:
+                text: "КОЛ."
+                color: MUTED
+                font_name: "assets/CascadiaCode.ttf"
+                font_size: "11sp"
+                bold: True
+                halign: "center"
+                valign: "middle"
+            Label:
+                text: "ОБЪЁМ"
+                color: MUTED
+                font_name: "assets/CascadiaCode.ttf"
+                font_size: "11sp"
+                bold: True
+                halign: "center"
+                valign: "middle"
+            Widget:
+                size_hint_x: 0.45
+
+        ScrollView:
+            do_scroll_x: False
+            do_scroll_y: True
+            bar_width: dp(4)
+            scroll_type: ['bars', 'content']
+
+            BoxLayout:
+                id: main_container
+                orientation: "vertical"
+                size_hint_x: 1
+                size_hint_y: None
+                width: self.parent.width
+                height: self.minimum_height
+                padding: dp(2), dp(4)
+                spacing: dp(8)
+
+<ProductScreen>:
+    canvas.before:
+        Color:
+            rgba: BG
+        Rectangle:
+            pos: self.pos
+            size: self.size
+    BoxLayout:
+        orientation: "vertical"
+        padding: dp(20), dp(14)
+        spacing: dp(12)
+
+        SoftButton:
+            text: "‹  Назад"
+            size_hint: None, None
+            size: dp(120), dp(46)
+            on_press: root.goto_main()
+
+        Image:
+            source: root.product_image
+            fit_mode: "contain"
+            size_hint_y: None
+            height: dp(190)
+
+        Label:
+            id: text_product
+            text: root.product_name
+            color: TEXT
+            font_name: "assets/CascadiaCode.ttf"
+            font_size: "22sp"
+            bold: True
+            size_hint_y: None
+            height: dp(44)
+            halign: "center"
+            text_size: self.width, None
+
+        Label:
+            text: "Количество"
+            color: MUTED
+            font_name: "assets/CascadiaCode.ttf"
+            font_size: "13sp"
+            size_hint_y: None
+            height: dp(24)
+            halign: "center"
+
+        Label:
+            id: text_quantity
+            text: root.product_quantity
+            color: TEXT
+            font_name: "assets/CascadiaCode.ttf"
+            font_size: "30sp"
+            bold: True
+            size_hint_y: None
+            height: dp(52)
+            halign: "center"
+
+        BoxLayout:
+            size_hint_y: None
+            height: dp(58)
+            spacing: dp(14)
+            padding: dp(24), 0
 
             Button:
-                text: "< Назад"
-                size_hint_x: None
-                width: "90dp"
-                font_size: "15sp"
+                text: "−"
+                font_size: "28sp"
+                bold: True
                 background_normal: ""
-                background_down: ""
                 background_color: 0, 0, 0, 0
-                color: 0.7, 0.75, 0.85, 1
+                color: TEXT
+                canvas.before:
+                    Color:
+                        rgba: DANGER
+                    RoundedRectangle:
+                        pos: self.pos
+                        size: self.size
+                        radius: [dp(16)]
+                on_press: root.delete_quantity()
+
+            Widget:
+                size_hint_x: 1
+
+            Button:
+                text: "+"
+                font_size: "28sp"
+                bold: True
+                background_normal: ""
+                background_color: 0, 0, 0, 0
+                color: TEXT
+                canvas.before:
+                    Color:
+                        rgba: ACCENT
+                    RoundedRectangle:
+                        pos: self.pos
+                        size: self.size
+                        radius: [dp(16)]
+                on_press: root.add_quantity()
+
+        Widget:
+            size_hint_y: 1
+
+<BasketScreen>:
+    canvas.before:
+        Color:
+            rgba: BG
+        Rectangle:
+            pos: self.pos
+            size: self.size
+    BoxLayout:
+        orientation: "vertical"
+        padding: dp(16), dp(14)
+        spacing: dp(10)
+
+        SoftButton:
+            text: "‹  Назад"
+            size_hint: None, None
+            size: dp(120), dp(46)
+            on_press: root.goto_main()
+
+        Label:
+            text: "Корзина"
+            color: TEXT
+            font_name: "assets/CascadiaCode.ttf"
+            font_size: "24sp"
+            bold: True
+            size_hint_y: None
+            height: dp(42)
+
+        BoxLayout:
+            size_hint_y: None
+            height: dp(34)
+            spacing: dp(8)
+            Label:
+                text: "ТОВАР"
+                color: MUTED
+                font_size: "11sp"
+                bold: True
+            Label:
+                text: "ЦЕНА"
+                color: MUTED
+                font_size: "11sp"
+                bold: True
+            Label:
+                text: "КОЛ."
+                color: MUTED
+                font_size: "11sp"
+                bold: True
+            Widget:
+                size_hint_x: 0.4
+
+        ScrollView:
+            do_scroll_x: False
+            do_scroll_y: True
+            BoxLayout:
+                id: basket_container
+                orientation: "vertical"
+                size_hint_x: 1
+                size_hint_y: None
+                width: self.parent.width
+                height: self.minimum_height
+                spacing: dp(8)
+
+        DarkButton:
+            text: "ОФОРМИТЬ ЗАКАЗ"
+            size_hint: None, None
+            pos_hint: {"center_x": 0.5}
+            size: dp(220), dp(56)
+            font_size: "16sp"
+            bold: True
+            on_press: root.goto_order()
+
+<Order>:
+    canvas.before:
+        Color:
+            rgba: BG
+        Rectangle:
+            pos: self.pos
+            size: self.size
+
+    BoxLayout:
+        orientation: "vertical"
+        padding: dp(16)
+        spacing: dp(12)
+
+        BoxLayout:
+            size_hint_y: None
+            height: dp(54)
+            spacing: dp(10)
+
+            SoftButton:
+                text: "‹  Назад"
+                size_hint_x: None
+                width: dp(120)
                 on_press: root.goto_basket()
 
             Label:
                 text: "Заказ"
-                font_size: "28sp"
+                font_size: "23sp"
                 bold: True
-                color: 1, 1, 1, 1
+                color: TEXT
+                font_name: "assets/CascadiaCode.ttf"
+                halign: "center"
+                valign: "middle"
 
             Widget:
                 size_hint_x: None
-                width: "90dp"
+                width: dp(120)
 
-        BoxLayout:
+        Label:
+            text: "Номер заказа: " + str(root.number_order())
+            font_size: "13sp"
+            color: MUTED
             size_hint_y: None
-            height: "30dp"
-            Label:
-                text: "Номер заказа: " + str(root.number_order())
-                font_size: "16sp"
-                color: 0.7, 0.75, 0.85, 1
+            height: dp(24)
+            halign: "left"
 
         BoxLayout:
             orientation: "horizontal"
             size_hint_y: None
-            height: "50dp"
-            spacing: "12dp"
+            height: dp(52)
+            spacing: dp(10)
 
             TextInput:
                 hint_text: "Имя"
                 multiline: False
-                font_size: "18sp"
-                background_color: 0.15, 0.17, 0.23, 1
-                foreground_color: 1, 1, 1, 1
-                hint_text_color: 0.55, 0.6, 0.7, 1
-                cursor_color: 1, 1, 1, 1
-                padding: "14dp"
+                font_size: "16sp"
+                background_normal: ""
+                background_color: SURFACE
+                foreground_color: TEXT
+                hint_text_color: MUTED
+                cursor_color: ACCENT
+                padding: dp(14), dp(12)
                 on_text: root.buyer_details("name", self.text)
 
             TextInput:
                 hint_text: "Фамилия"
                 multiline: False
-                font_size: "18sp"
-                background_color: 0.15, 0.17, 0.23, 1
-                foreground_color: 1, 1, 1, 1
-                hint_text_color: 0.55, 0.6, 0.7, 1
-                cursor_color: 1, 1, 1, 1
-                padding: "14dp"
+                font_size: "16sp"
+                background_normal: ""
+                background_color: SURFACE
+                foreground_color: TEXT
+                hint_text_color: MUTED
+                cursor_color: ACCENT
+                padding: dp(14), dp(12)
                 on_text: root.buyer_details("Фамилия", self.text)
+
+        BoxLayout:
+            size_hint_y: None
+            height: dp(34)
+            spacing: dp(8)
+            Label:
+                text: "ТОВАР"
+                bold: True
+                color: MUTED
+            Label:
+                text: "ЦЕНА"
+                bold: True
+                color: MUTED
+            Label:
+                text: "КОЛИЧЕСТВО"
+                bold: True
+                color: MUTED
+            Widget:
+                size_hint_x: 0.4
 
         ScrollView:
             do_scroll_x: False
@@ -412,115 +596,83 @@
             BoxLayout:
                 id: order_products
                 orientation: "vertical"
+                size_hint_x: 1
                 size_hint_y: None
+                width: self.parent.width
                 height: self.minimum_height
-                spacing: "8dp"
-
-        BoxLayout:
-            size_hint_y: None
-            height: "36dp"
-            spacing: "10dp"
-            padding: "10dp", 0
-
-            Label:
-                text: "Товар"
-                bold: True
-                color: 0.7, 0.75, 0.85, 1
-            Label:
-                text: "Цена"
-                bold: True
-                color: 0.7, 0.75, 0.85, 1
-            Label:
-                text: "Количество"
-                bold: True
-                color: 0.7, 0.75, 0.85, 1
-
-            Widget:
-                size_hint_x: 0.4
+                spacing: dp(8)
 
         BoxLayout:
             orientation: "horizontal"
             size_hint_y: None
-            height: "40dp"
-            spacing: "10dp"
-
+            height: dp(42)
+            spacing: dp(10)
             CheckBox:
                 size_hint_x: None
-                width: "40dp"
+                width: dp(40)
                 active: root.pack_order
                 on_active: root.toggle_packing(self.active)
-
             Label:
                 text: "Упаковать в коробку (10 л)"
-                font_size: "15sp"
-                color: 1, 1, 1, 1
-                text_size: self.size
-
-        BoxLayout:
-            size_hint_y: None
-            height: "26dp"
-            opacity: 1 
-
-            Label:
-                text: root.volume_status
-                font_size: "13sp"
-                color: 0.95, 0.3, 0.3, 1
+                font_size: "14sp"
+                color: TEXT
                 halign: "left"
                 valign: "middle"
                 text_size: self.size
 
-        BoxLayout:
+        Label:
+            text: root.volume_status
+            font_size: "12sp"
+            color: DANGER
             size_hint_y: None
-            height: "26dp"
-            opacity: 1
+            height: dp(22)
+            halign: "left"
 
-            Label:
-                text: root.box_count_status
-                font_size: "13sp"
-                color: 0.6, 0.85, 0.6, 1
-                halign: "left"
-                valign: "middle"
-                text_size: self.size
-            
+        Label:
+            text: root.box_count_status
+            font_size: "12sp"
+            color: SUCCESS
+            size_hint_y: None
+            height: dp(22)
+            halign: "left"
+
         Widget:
-            size_hint_y: 0.3
+            size_hint_y: 0.2
 
         BoxLayout:
             orientation: "horizontal"
             size_hint_y: None
-            height: "56dp"
-            spacing: "12dp"
+            height: dp(56)
+            spacing: dp(12)
 
             Label:
                 text: root.total_price
                 font_size: "22sp"
                 bold: True
-                color: 1, 1, 1, 1
+                color: TEXT
+                halign: "left"
+                valign: "middle"
 
-            Button:
+            DarkButton:
                 text: "Подтвердить"
-                size_hint: None, None
-                size: "200dp", "56dp"
-                font_size: "20sp"
+                size_hint_x: None
+                width: dp(190)
+                font_size: "16sp"
                 bold: True
-                background_normal: ""
-                background_color: (0.18, 0.75, 0.38, 1) if self.state == 'normal' else (0.22, 0.82, 0.44, 1)
-                color: 1, 1, 1, 1
                 on_press: root.confirm_order()
-
 
 <OrderConfirmedScreen>:
     canvas.before:
         Color:
-            rgba: 1, 1, 1, 1
+            rgba: BG
         Rectangle:
             pos: self.pos
             size: self.size
 
     BoxLayout:
         orientation: "vertical"
-        padding: "32dp", "40dp"
-        spacing: "22dp"
+        padding: dp(28), dp(30)
+        spacing: dp(18)
 
         Widget:
             size_hint_y: 1
@@ -528,22 +680,26 @@
         BoxLayout:
             orientation: "horizontal"
             size_hint_y: None
-            height: "160dp"
-
+            height: dp(140)
             Widget:
                 size_hint_x: 1
             Widget:
                 id: circle_bg
                 size_hint: None, None
-                size: "160dp", "160dp"
+                size: dp(140), dp(140)
                 canvas.before:
                     Color:
-                        rgba: 0.20, 0.68, 0.32, 1
+                        rgba: SUCCESS
                     Ellipse:
                         pos: self.pos
                         size: self.size
                     Color:
-                        rgba: 1, 1, 1, 1
+                        rgba: BG
+                    Ellipse:
+                        pos: self.x + dp(8), self.y + dp(8)
+                        size: self.width - dp(16), self.height - dp(16)
+                    Color:
+                        rgba: SUCCESS
                     Line:
                         points: [self.x + self.width * 0.28, self.y + self.height * 0.52, self.x + self.width * 0.45, self.y + self.height * 0.30, self.x + self.width * 0.76, self.y + self.height * 0.66]
                         width: dp(8)
@@ -556,26 +712,28 @@
             text: "Спасибо, " + root.buyer_full_name + "!"
             font_size: "24sp"
             bold: True
-            color: 0.1, 0.1, 0.1, 1
+            color: TEXT
+            font_name: "assets/CascadiaCode.ttf"
             size_hint_y: None
-            height: "34dp"
+            height: dp(38)
 
         Label:
-            text: "Ваш заказ успешно оформлен. Мы свяжемся с вами в ближайшее время.\nНомер вашего заказа #" + root.order_number + "."
+            text: "Ваш заказ успешно оформлен.\nНомер заказа #" + root.order_number + "."
             font_size: "15sp"
-            color: 0.4, 0.4, 0.4, 1
+            color: MUTED
+            font_name: "assets/CascadiaCode.ttf"
             size_hint_y: None
-            height: "60dp"
+            height: dp(60)
             text_size: self.width, None
+            halign: "center"
 
         Widget:
             size_hint_y: 1
 
-        Button:
-            text: "ВЕРНУТЬСЯ В МАГАЗИН"
-            height: "52dp"
-            font_size: "16sp"
+        DarkButton:
+            text: "ВЕРНУТЬСЯ В СКЛАД"
+            size_hint_y: None
+            height: dp(54)
+            font_size: "15sp"
             bold: True
-            background_color: 0.86, 0.14, 0.28, 1
-            color: 1, 1, 1, 1
             on_press: root.goto_main()
