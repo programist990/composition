@@ -28,5 +28,105 @@
         "quantity": "1",
         "price": "180",
         "volume": "6000"
+    },
+    "груша": {
+        "quantity": "1",
+        "price": "40",
+        "volume": "110"
+    },
+    "апельсин": {
+        "quantity": "1",
+        "price": "45",
+        "volume": "130"
+    },
+    "мандарин": {
+        "quantity": "1",
+        "price": "50",
+        "volume": "80"
+    },
+    "лимон": {
+        "quantity": "1",
+        "price": "55",
+        "volume": "90"
+    },
+    "лайм": {
+        "quantity": "1",
+        "price": "60",
+        "volume": "70"
+    },
+    "киви": {
+        "quantity": "1",
+        "price": "60",
+        "volume": "90"
+    },
+    "персик": {
+        "quantity": "1",
+        "price": "70",
+        "volume": "110"
+    },
+    "слива": {
+        "quantity": "1",
+        "price": "65",
+        "volume": "70"
+    },
+    "абрикос": {
+        "quantity": "1",
+        "price": "60",
+        "volume": "60"
+    },
+    "вишня": {
+        "quantity": "1",
+        "price": "220",
+        "volume": "60"
+    },
+    "черешня": {
+        "quantity": "1",
+        "price": "250",
+        "volume": "60"
+    },
+    "малина": {
+        "quantity": "1",
+        "price": "300",
+        "volume": "400"
+    },
+    "ежевика": {
+        "quantity": "1",
+        "price": "280",
+        "volume": "400"
+    },
+    "смородина": {
+        "quantity": "1",
+        "price": "180",
+        "volume": "350"
+    },
+    "черника": {
+        "quantity": "1",
+        "price": "320",
+        "volume": "350"
+    },
+    "дыня": {
+        "quantity": "1",
+        "price": "120",
+        "volume": "4000"
+    },
+    "манго": {
+        "quantity": "1",
+        "price": "150",
+        "volume": "350"
+    },
+    "гранат": {
+        "quantity": "1",
+        "price": "130",
+        "volume": "400"
+    },
+    "хурма": {
+        "quantity": "1",
+        "price": "90",
+        "volume": "250"
+    },
+    "авокадо": {
+        "quantity": "1",
+        "price": "140",
+        "volume": "200"
     }
 }
