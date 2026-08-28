@@ -494,6 +494,23 @@ class Order(Screen):
 
         return box_quantity
 
+    def fill_box_2(self):
+        box_volume = 10000
+        box_quantity = 1
+        product_items = self.get_volume_products()
+        coins = [2, 3, 6]
+        dp = [0]
+        quantity_name = []
+        for i in range(1, box_volume + 1):
+            dp.append(float("inf"))
+
+        for i in range(1, box_volume + 1):
+            for name, data in product_items:
+                if i < data["volume"]:
+                    break
+                dp[i] = min(dp[i], dp[i - data["volume"]] + 1)
+                quantity_name[i] = ...
+
 
 class OrderConfirmedScreen(Screen):
     order_number = StringProperty("")
