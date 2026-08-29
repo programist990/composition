@@ -8,3 +8,4 @@ basket = []
 # basket_quantity = []
 
 PACKING_BOX_VOLUME = 10000
+PACKING_BOX_PRICE = 200

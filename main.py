@@ -295,6 +295,8 @@ class Order(Screen):
     volume_fits = BooleanProperty(True)
     volume_status = StringProperty("")
     box_count_status = StringProperty("")
+    box_count = 0
+    box_price = PACKING_BOX_PRICE
 
     def __init__(self, **kw):
         super().__init__(**kw)
@@ -347,9 +349,13 @@ class Order(Screen):
 
         if active:
             box_quantity = self.fill_box()
-            self.box_count_status = f"Используется коробок: {box_quantity}"
+            self.box_count = box_quantity
+            self.box_count_status = f"Используется коробок: {box_quantity} (+{box_quantity * self.box_price})"
         else:
+            self.box_count = 0
             self.box_count_status = ""
+
+        self.total_price = self.sum_price()
 
     def confirm_order(self):
         full_name = self.get_full_name()
@@ -439,6 +445,9 @@ class Order(Screen):
         for name in basket:
             if name in products:
                 total += int(products[name]["quantity"]) * int(products[name]["price"])
+
+        if self.pack_order:
+            total += self.box_count * self.box_price
 
         return str(total)
 
