@@ -34,7 +34,7 @@ def write_json(path, data):
 
 
 def read_products():
-    with open(PATH_DATA + "list_products.json", "r", encoding="utf8") as file:
+    with open(PATH_DATA + FILE_PRODUCTS, "r", encoding="utf8") as file:
         data = json.load(file)
     return data
 
@@ -43,9 +43,9 @@ def reset_quantities():
     products = read_products()
 
     for name in products:
-        products[name]["quantity"] = "1"
+        products[name]["quantity"] = DEFAULT_QUANTITY
 
-    write_json(PATH_DATA + "list_products.json", products)
+    write_json(PATH_DATA + FILE_PRODUCTS, products)
 
 
 class BoxRow(BoxLayout):
@@ -179,7 +179,7 @@ class ProductScreen(Screen):
         super().__init__(**kw)
 
     def write_products(self, products):
-        with open(PATH_DATA + "list_products.json", "w", encoding="utf8") as file:
+        with open(PATH_DATA + FILE_PRODUCTS, "w", encoding="utf8") as file:
             json.dump(products, file, ensure_ascii=False, indent=4)
 
     def load_product(self, name):
@@ -251,7 +251,7 @@ class MainScreen(Screen):
         self.load_resources()
 
     def load_resources(self):
-        with open(PATH_DATA + "list_resources.json", "r", encoding="utf8") as file:
+        with open(PATH_DATA + FILE_RESOURCES, "r", encoding="utf8") as file:
             data = json.load(file)
             RESOURCES.update(data)
 
@@ -318,7 +318,7 @@ class Order(Screen):
         return full_name
 
     def seller_id(self, full_name):
-        sellers_path = PATH_DATA + "sellers.json"
+        sellers_path = PATH_DATA + FILE_SELLERS
         sellers = read_json(sellers_path)
 
         if full_name in sellers:
@@ -328,7 +328,7 @@ class Order(Screen):
         for seller in sellers:
             used_ids.append(sellers[seller])
 
-        new_id = 1001
+        new_id = SELLER_ID_START
         while new_id in used_ids:
             new_id += 1
 
@@ -337,7 +337,7 @@ class Order(Screen):
         return new_id
 
     def number_order(self):
-        data = read_json(PATH_DATA + "orders.json")
+        data = read_json(PATH_DATA + FILE_ORDERS)
         count = 0
         for seller in data:
             count += len(data[seller])
@@ -373,10 +373,10 @@ class Order(Screen):
         items = {}
 
         seller_id = self.seller_id(full_name)
-        date = datetime.now().strftime("%d.%m.%Y")
+        date = datetime.now().strftime(DATE_FORMAT)
         order_number = self.number_order()
 
-        orders_path = PATH_DATA + "orders.json"
+        orders_path = PATH_DATA + FILE_ORDERS
         data = read_json(orders_path)
         seller_key = str(seller_id)
         if seller_key not in data:
@@ -478,7 +478,7 @@ class Order(Screen):
         return sorted_items
 
     def fill_box(self):
-        box_volume = 10000
+        box_volume = PACKING_BOX_VOLUME
         box_quantity = 1
         product_items = self.get_volume_products()
 
@@ -504,7 +504,7 @@ class Order(Screen):
                 break
 
             box_quantity += 1
-            box_volume = 10000
+            box_volume = PACKING_BOX_VOLUME
 
         return box_quantity
 
@@ -557,13 +557,13 @@ class CompositionApp(App):
         self.scr_sm.add_widget(OrderConfirmedScreen(name="order_confirmed"))
 
         if platform == "android":
-            Window.clearcolor = (0.055, 0.07, 0.09, 1)
+            Window.clearcolor = WINDOW_CLEAR_COLOR
             Window.fullscreen = True
         else:
-            Window.size = (350, 700)
-            Window.clearcolor = (0.055, 0.07, 0.09, 1)
-            Window.left = 450
-            Window.top = 1
+            Window.size = WINDOW_SIZE
+            Window.clearcolor = WINDOW_CLEAR_COLOR
+            Window.left = WINDOW_LEFT
+            Window.top = WINDOW_TOP
 
         return self.scr_sm
 
