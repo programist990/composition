@@ -101,6 +101,7 @@ class BasketRow(BoxLayout):
     product_price = StringProperty("")
     product_volume = StringProperty("")
     quantity_box = StringProperty("0")
+    product_total = StringProperty("0")
 
     def on_touch_up(self, touch):
         if self.collide_point(touch.pos[0], touch.pos[1]) and self.product_name:
@@ -123,12 +124,16 @@ class BasketScreen(Screen):
         for name in basket:
             if name in products:
                 info = products[name]
+                price = int(info["price"])
+                quantity = int(info["quantity"])
+                total = price * quantity
 
                 row = BasketRow(
                     product_name=name,
                     product_price=info["price"],
                     product_volume=info["volume"],
                     quantity_box=info["quantity"],
+                    product_total=str(total),
                 )
                 self.ids.basket_container.add_widget(row)
 
